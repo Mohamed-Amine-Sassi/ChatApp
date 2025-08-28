@@ -6,7 +6,9 @@ function App() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [resevedData, setResevedData] = useState("");
+  const [resevedData, setResevedData] = useState<
+    { user: string; msg: string }[]
+  >([]);
 
   useEffect(() => {
     const newSocket = io("http://localhost:4000");
@@ -20,7 +22,7 @@ function App() {
     });
     newSocket.on("rseved_msg", (data) => {
       console.log(data);
-      setResevedData(data);
+      setResevedData((prev) => [...prev, data]);
     });
 
     return () => {
@@ -43,14 +45,13 @@ function App() {
             setName(e.target.value);
           }}
         />
-        <div className="left_msgs">
-          <p className="msg">{resevedData}</p>
-          <span className="sender_time">Monica - time</span>
-        </div>
-        <div className="right-msgs">
-          <p className="msg">Hi</p>
-          <span className="sender_time">Monica - time</span>
-        </div>
+        {resevedData.map((m) => (
+          <div className={m.user === name ? "right-msgs" : "left-msgs"}>
+            <p className="msg">{m.msg}</p>
+            <span className="sender_time">Monica - time</span>
+          </div>
+        ))}
+
         <input
           type="text"
           placeholder="Ur Msg..."

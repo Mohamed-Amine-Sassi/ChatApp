@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
 
   socket.on("message", (data) => {
     console.log(data);
-    socket.broadcast.emit("rseved_msg", data.msg);
+    io.emit("rseved_msg", data);
   });
 });
 
