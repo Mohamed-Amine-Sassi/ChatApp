@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { io, Socket } from "socket.io-client";
+import moment from "moment";
 function App() {
   const [nbreOfUsers, setNbreOfUsers] = useState(0);
   const [name, setName] = useState("");
@@ -45,13 +46,22 @@ function App() {
             setName(e.target.value);
           }}
         />
-        {resevedData.map((m) => (
-          <div className={m.user === name ? "right-msgs" : "left-msgs"}>
-            <p className="msg">{m.msg}</p>
-            <span className="sender_time">Monica - time</span>
-          </div>
-        ))}
-
+        <div className="messages-container">
+          {resevedData.map((m) => (
+            <div className={m.user === name ? "right-msgs" : "left-msgs"}>
+              <p className="msg">{m.msg}</p>
+              {m.user === name ? (
+                <span className="sender_time">
+                  {name} - {moment().format("DD/MM/YYYY - h:mm a")}
+                </span>
+              ) : (
+                <span className="sender_time">
+                  {m.user} - {moment().format("DD/MM/YYYY - h:mm a")}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
         <input
           type="text"
           placeholder="Ur Msg..."
