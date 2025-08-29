@@ -5,6 +5,8 @@ import moment from "moment";
 function App() {
   const [nbreOfUsers, setNbreOfUsers] = useState(0);
   const [name, setName] = useState("");
+  const [room, setRoom] = useState("");
+
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [resevedData, setResevedData] = useState<
@@ -32,9 +34,17 @@ function App() {
   }, []);
   const handleMsgSending = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = { user: name, msg: message };
-    if (socket != null) socket.emit("message", data);
+    if (!socket || room === "") return;
+    const data = { room, user: name, msg: message };
+    socket.emit("message", data);
   };
+  const joinRoom = () => {
+    if (socket && room !== "") {
+      socket.emit("joinRoom", room);
+      console.log(`Joined room ${room}`);
+    }
+  };
+
   return (
     <>
       <form action="" onSubmit={handleMsgSending}>
@@ -44,6 +54,15 @@ function App() {
           className="user_name"
           onChange={(e) => {
             setName(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Room Number"
+          className="user_name"
+          onChange={(e) => {
+            setRoom(e.target.value);
+            joinRoom;
           }}
         />
         <div className="messages-container">
@@ -70,7 +89,9 @@ function App() {
             setMessage(e.target.value);
           }}
         />
-        <button type="submit">Send Msg</button>
+        <button type="submit" onClick={joinRoom}>
+          Send Msg
+        </button>
         <h3 className="number_users">Number of Users is:{nbreOfUsers}</h3>
       </form>
     </>

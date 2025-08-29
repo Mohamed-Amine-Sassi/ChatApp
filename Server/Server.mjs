@@ -12,14 +12,20 @@ io.on("connection", (socket) => {
   socketSet.add(socket.id);
   io.emit("numberOfConnection", socketSet.size);
 
-  socket.on("disconnect", () => {
-    socketSet.delete(socket.id);
-    io.emit("numberOfConnection", socketSet.size);
+  socket.on("joinRoom", (room) => {
+    socket.join(room);
+    console.log(`${socket.id} joined room ${room}`);
+    socket.emit("joinedRoom", room);
   });
 
   socket.on("message", (data) => {
     console.log(data);
-    io.emit("rseved_msg", data);
+    io.to(data.room).emit("rseved_msg", data);
+  });
+
+  socket.on("disconnect", () => {
+    socketSet.delete(socket.id);
+    io.emit("numberOfConnection", socketSet.size);
   });
 });
 
