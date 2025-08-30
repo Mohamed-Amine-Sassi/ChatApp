@@ -62,9 +62,11 @@ function App() {
           className="user_name"
           onChange={(e) => {
             setRoom(e.target.value);
-            joinRoom;
           }}
         />
+        <button type="button" onClick={joinRoom}>
+          Join Room
+        </button>
         <div className="messages-container">
           {resevedData.map((m) => (
             <div className={m.user === name ? "right-msgs" : "left-msgs"}>
@@ -89,9 +91,7 @@ function App() {
             setMessage(e.target.value);
           }}
         />
-        <button type="submit" onClick={joinRoom}>
-          Send Msg
-        </button>
+        <button type="submit">Send Msg</button>
         <h3 className="number_users">Number of Users is:{nbreOfUsers}</h3>
       </form>
     </>
